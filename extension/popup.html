@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PhishGuard AI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="popup">
+  <header>
+    <div class="row gap"><span style="font-size:22px">🛡️</span>
+      <div><div style="font-weight:800">PhishGuard <span class="red">AI</span></div>
+      <div class="small grn"><span class="dot on"></span>Active Shield</div></div></div>
+    <div class="row gap"><span class="pill" id="status"><span class="dot"></span>Checking…</span><span class="pill">v2.1</span></div>
+  </header>
+  <div class="tog">
+    <label class="sw"><input type="checkbox" id="t-auto"> Auto-protect browsing</label>
+    <label class="sw"><input type="checkbox" id="t-dl"> Download guard</label>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-tab="text">💬 Text</button><button class="tab" data-tab="img">🖼️ OCR/QR</button>
+    <button class="tab" data-tab="url">🔗 URL</button><button class="tab" data-tab="dl">⬇️ Download</button><button class="tab" data-tab="rep">🚩 Report</button>
+  </nav>
+  <main>
+    <section class="pane on" data-pane="text">
+      <textarea id="txt" rows="5" placeholder="Paste a suspicious SMS, email or chat message…"></textarea>
+      <div class="row gap"><button class="btn btn-red grow" id="scan-text">🔍 Scan message</button><button class="btn" id="demo-text">Demo</button></div>
+      <label class="sw"><input type="checkbox" id="use-llm" checked> Add local AI opinion (Ollama, if running)</label>
+    </section>
+    <section class="pane" data-pane="img">
+      <select id="img-mode"><option value="image">Screenshot (OCR)</option><option value="qr">QR code (quishing check)</option></select>
+      <div class="drop" id="drop">📤 Drop an image here or click to upload<div class="small">PNG / JPG, up to 5 MB</div></div>
+      <input type="file" id="file" accept="image/*" hidden>
+    </section>
+    <section class="pane" data-pane="url">
+      <input type="text" id="url" placeholder="https://example.com">
+      <div class="row gap"><button class="btn btn-red grow" id="scan-url">Check URL</button><button class="btn" id="cur-tab">Use current tab</button></div>
+    </section>
+    <section class="pane" data-pane="dl">
+      <input type="text" id="dl-file" value="invoice_update_2026.pdf.exe" placeholder="Filename">
+      <input type="text" id="dl-url" value="http://bit.ly/suspicious-payload-dl" placeholder="Download URL">
+      <button class="btn btn-red btn-w" id="scan-dl">🛡️ Inspect download &amp; redirects</button>
+    </section>
+    <section class="pane" data-pane="rep">
+      <p class="muted small" style="margin:0">Broadcast a malicious URL to the community threat database.</p>
+      <input type="text" id="rep-url" placeholder="Malicious URL">
+      <select id="rep-type"><option>Credential phishing</option><option>Fake refund scam</option><option>Bank KYC scam</option><option>Malware delivery</option><option>Quishing</option><option>Giveaway scam</option></select>
+      <button class="btn btn-amber btn-w" id="rep-btn">📡 Report site</button>
+    </section>
+    <div id="busy" class="muted" hidden style="margin-top:12px">⏳ Analyzing threat signals…</div>
+    <div id="err" class="err" hidden></div>
+    <div id="out"></div>
+  </main>
+  <footer><span id="foot">Connecting…</span><a id="open-dash">Open dashboard →</a></footer>
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

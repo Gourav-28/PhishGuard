@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PhishGuard AI Command Center</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="app">
+  <div class="topbar"><div class="in row gap wrap between">
+    <div class="row gap"><span style="font-size:24px">🛡️</span><b style="font-size:17px">PhishGuard <span class="red">AI</span></b></div>
+    <nav class="nav">
+      <a href="#/dashboard" data-p="dashboard">Dashboard</a><a href="#/radar" data-p="radar">Typosquat Radar</a>
+      <a href="#/community" data-p="community">Community DB</a><a href="#/downloads" data-p="downloads">Downloads</a>
+      <a href="#/settings" data-p="settings">Settings</a><a id="preview-block" href="#" title="Preview the block screen">Warning page ↗</a>
+    </nav>
+    <span class="pill" id="status"><span class="dot"></span>Checking backend…</span>
+  </div></div>
+
+  <div class="wrapx">
+  <!-- DASHBOARD -->
+  <section class="page" id="page-dashboard">
+    <div class="stats" id="stats"></div>
+    <div class="g2">
+      <div class="card">
+        <div class="row between"><h2 style="font-size:15px">📡 Multi-Modal Threat Scanner</h2><span class="badge b-green">Live</span></div>
+        <div class="tabs" id="modes" style="margin-top:10px"></div>
+        <div id="form"></div><div id="busy" class="muted" hidden style="margin-top:10px">⏳ Analyzing… (local AI can take a few seconds)</div>
+        <div id="err" class="err" hidden></div><div id="out"></div>
+      </div>
+      <div style="display:grid;gap:16px;align-content:start">
+        <div class="card"><h2 style="font-size:15px">🕘 Recent scans</h2><div id="hist"><p class="muted">No scans yet. Run one to see it here.</p></div></div>
+        <div class="card"><h2 style="font-size:15px">📬 Inbox Guard (Gmail)</h2>
+          <p class="muted small">Scans new unread mail every 15 min (headers, links and local AI). Opening a mail in Gmail is also scanned live.</p>
+          <div class="row gap wrap"><button class="btn btn-sky" id="gm-connect">🔐 Connect Google Inbox</button><button class="btn" id="gm-scan">Scan inbox now</button></div>
+          <div id="gm-msg" class="small muted" style="margin-top:8px"></div><div id="inbox"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RADAR -->
+  <section class="page" id="page-radar">
+    <div class="card row gap wrap"><select id="rd-brand" style="width:auto"></select>
+      <input type="text" id="rd-dom" class="grow" placeholder="Suspect domain, e.g. paypa1.com" style="min-width:200px"><button class="btn btn-red" id="rd-go">🔎 Analyze domain</button></div>
+    <div id="rd-err" class="err" hidden></div>
+    <div class="tw"><table><thead><tr><th>Target brand</th><th>Suspect domain</th><th>Levenshtein</th><th>Technique</th><th>Status</th></tr></thead><tbody id="rd-body"></tbody></table></div>
+    <p class="muted small">Distances come from the backend: raw Levenshtein plus a homoglyph-normalized distance ("1" → "l"). Community-reported domains that imitate a brand appear automatically.</p>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section class="page" id="page-community">
+    <div class="row between wrap"><div class="muted"><span class="dot on"></span>Live ledger · crowdsourced reports</div><button class="btn btn-amber" id="cm-new">＋ Report new site</button></div>
+    <div id="cm-err" class="err" hidden></div><div id="cm-list"></div>
+  </section>
+
+  <!-- DOWNLOADS -->
+  <section class="page" id="page-downloads">
+    <div class="card"><div class="row between"><h2 style="font-size:15px">⬇️ Suspicious Download Guard</h2><span class="badge b-red">Active endpoint hook</span></div>
+      <p class="muted small">The extension pauses every browser download, asks the backend to judge file type + redirect chain, then cancels or resumes it. Try one manually:</p>
+      <div class="row gap wrap"><input type="text" id="dl-f" class="grow" placeholder="Filename (e.g. update.exe)" style="min-width:180px"><input type="text" id="dl-u" class="grow" placeholder="Download URL" style="min-width:180px"><button class="btn btn-red" id="dl-go">Inspect</button></div>
+      <div id="dl-err" class="err" hidden></div></div>
+    <div class="tw"><table><thead><tr><th>Filename</th><th>Source / redirects</th><th>Final destination</th><th>Risk</th><th>Action</th></tr></thead><tbody id="dl-body"></tbody></table></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="page" id="page-settings">
+    <div class="card" style="max-width:560px"><h2 style="font-size:15px">⚙️ Settings</h2>
+      <label class="f">Backend URL</label><input type="text" id="s-api">
+      <label class="f">API key (only if you set API_KEY on the backend)</label><input type="password" id="s-key" autocomplete="off">
+      <label class="f">Block pages scoring at or above: <b id="s-th-v"></b>%</label><input type="range" id="s-th" min="40" max="95" style="width:100%;accent-color:#ef4444">
+      <label class="sw" style="margin-top:12px"><input type="checkbox" id="s-auto"> Auto-protect browsing (checks each site you open; nothing leaves your machine with a local backend)</label>
+      <label class="sw" style="margin-top:8px"><input type="checkbox" id="s-dl"> Download guard</label>
+      <div class="row gap" style="margin-top:14px"><button class="btn btn-red" id="s-save">Save</button><button class="btn" id="s-test">Test connection</button></div>
+      <div id="s-msg" class="small muted" style="margin-top:10px"></div></div>
+    <div class="card" style="max-width:560px"><h2 style="font-size:15px">📊 Protection summary</h2><div id="s-sum" class="muted"></div></div>
+  </section>
+  </div>
+
+  <div class="modal" id="modal" hidden><div class="card">
+    <div class="row between"><h3>🚩 Report a malicious site</h3><button class="btn" id="m-x">✕</button></div>
+    <label class="f">URL</label><input type="text" id="m-url" placeholder="evil-login-page.xyz">
+    <label class="f">Threat type</label><select id="m-type"><option>Credential phishing</option><option>Fake refund scam</option><option>Bank KYC scam</option><option>Malware delivery</option><option>Quishing</option><option>Giveaway scam</option></select>
+    <div id="m-err" class="err" hidden></div><button class="btn btn-amber btn-w" id="m-go" style="margin-top:12px">Submit to community DB</button></div></div>
+  <script src="shared.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
