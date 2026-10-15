@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Deceptive site blocked · PhishGuard AI</title><link rel="stylesheet" href="styles.css"></head>
+<body class="blocked">
+  <div class="in">
+    <div style="font-size:64px">🚨</div>
+    <h1>Deceptive site or download ahead</h1>
+    <p>Attackers on <b class="mono" id="host"></b> may trick you into sharing passwords or installing malicious software. PhishGuard AI blocked this page for your protection.</p>
+    <div class="panel row gap" style="align-items:flex-start"><div id="meter"></div><div class="grow"><div class="lbl" style="color:#fecaca">Why it was blocked</div><ul id="reasons" style="margin:6px 0 0;padding-left:18px"></ul></div></div>
+    <div class="row gap wrap">
+      <button class="btn btn-w2" id="back">← Back to safety</button>
+      <button class="btn btn-o" id="report">🚩 Report this site</button>
+      <button class="btn btn-o" id="more">Show details</button>
+    </div>
+    <div class="panel" id="detail" hidden><div class="small">Blocked URL</div><div class="mono small" id="full"></div>
+      <button class="btn btn-o" id="proceed" style="margin-top:10px">I understand the risk, proceed for 30 minutes (not recommended)</button></div>
+  </div>
+  <script src="shared.js"></script>
+  <script src="blocked.js"></script>
+</body>
+</html>
